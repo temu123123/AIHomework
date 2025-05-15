@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Expense Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+    input { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+<h2>Monthly Expense Calculator</h2>
+
+<table id="expenseTable">
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Amount ($)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Groceries</td><td>15000</td></tr>
+    <tr><td>Rent</td><td>40000</td></tr>
+    <tr><td>Transportation</td><td>5000</td></tr>
+    <tr><td>Entertainment</td><td>10000</td></tr>
+    <tr><td>Communication</td><td>2000</td></tr>
+    <tr><td>Gym</td><td>3000</td></tr>
+  </tbody>
+</table>
+
+<br>
+<label>Category: <input type="text" id="category" /></label>
+<label>Amount: <input type="number" id="amount" /></label>
+<button onclick="addExpense()">Add</button>
+<button onclick="calculate()">Calculate</button>
+
+<h3>Results:</h3>
+<p id="total"></p>
+<p id="average"></p>
+<p id="top3"></p>
+
+<script>
+function addExpense() {
+  const category = document.getElementById("category").value;
+  const amount = parseFloat(document.getElementById("amount").value);
+  if (!category || isNaN(amount)) return;
+
+  const table = document.getElementById("expenseTable").getElementsByTagName('tbody')[0];
+  const row = table.insertRow();
+  row.insertCell(0).textContent = category;
+  row.insertCell(1).textContent = amount;
+}
+
+function calculate() {
+  const rows = document.getElementById("expenseTable").getElementsByTagName('tbody')[0].rows;
+  let total = 0;
+  let expenses = [];
+
+  for (let row of rows) {
+    const category = row.cells[0].textContent;
+    const amount = parseFloat(row.cells[1].textContent);
+    total += amount;
+    expenses.push({ category, amount });
+  }
+
+  const average = total / 30;
+  expenses.sort((a, b) => b.amount - a.amount);
+  const top3 = expenses.slice(0, 3).map(e => `${e.category} ($${e.amount})`).join(", ");
+
+  document.getElementById("total").textContent = `Total expenses: $${total}`;
+  document.getElementById("average").textContent = `Average daily expense: $${average.toFixed(2)}`;
+  document.getElementById("top3").textContent = `Top 3 expenses: ${top3}`;
+}
+</script>
+
+</body>
+</html>
